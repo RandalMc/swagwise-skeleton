@@ -121,7 +121,7 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-passport.use('local', new LocalStrategy({ usernameField : 'email'}, function(req, email, password, done) {
+passport.use('local', new LocalStrategy({ usernameField : 'email'}, function(email, password, done) {
     var User = mongoose.model('User');
 
     User.findOne({ email: email }, function(err, user) {

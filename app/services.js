@@ -15,7 +15,9 @@
 
             logout: $resource('/api/logout'),
 
-            register: $resource('/api/register')
+            register: $resource('/api/register'),
+
+	        user: $resource('/api/admin/users')
 
         };
 

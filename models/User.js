@@ -6,7 +6,8 @@ var userSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     password: String,
     customer_id: String,
-	isAdmin: Boolean
+	isAdmin: Boolean,
+	isActive: Boolean
 });
 
 var User = mongoose.model('User', userSchema);

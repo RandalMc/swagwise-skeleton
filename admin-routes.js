@@ -1,4 +1,4 @@
-module.exports = function(app, passport) {
+module.exports = function(app) {
 
     // Require mongoose dependency
     var mongoose = require('mongoose');
@@ -6,12 +6,17 @@ module.exports = function(app, passport) {
     /* Add the dependency to Stripe */
     var stripe   = require('stripe')('sk_test_MPZw5Of5EjrfHaAM789HgPUc');
 
-    /* ======================= REST ROUTES ====================== */
-    // Handle API calls
+	// Create a new instance of the Express 4 router
+	var router = require('express').Router();
+
+	var User = mongoose.model('User');
+
+	/* ======================= MIDDLEWARE ====================== */
 
 	function checkRole(role) {
 		return function(req, res, next) {
 
+			// if (req.user.isAdmin = true)
 			if (req.user && req.user[role]) {
 				next();
 			} else {
@@ -20,9 +25,13 @@ module.exports = function(app, passport) {
 		}
 	}
 
-    // Swag API route
-    app.route('/api/admin/products')
-	    .all(checkRole('isAdmin'))
+    /* ======================= REST ROUTES ====================== */
+
+	router.route('/*')
+		.all(checkRole('isAdmin'));
+
+    // Products API route
+    router.route('/products')
         .get(function(req, res) {
 
 		    var filter = {};
@@ -45,7 +54,7 @@ module.exports = function(app, passport) {
             });
         });
 
-    app.route('/api/admin/products/:id')
+    router.route('/products/:id')
         .get(function(req, res) {
             // use mongoose to get a product in the database by id
             mongoose.model('Product').findOne({id: req.params.id}, function(err, product) {
@@ -57,8 +66,99 @@ module.exports = function(app, passport) {
             });
         });
 
-	app.route('/api/admin/users', function(req, res) {});
+	router.route('/users')
+		.get(function(req, res) {
 
-	app.route('/api/admin/users/:id', function(req, res) {});
+			User.find(req.query, function(err, users) {
 
+				if (err) res.send(err);
+
+				res.send(users);
+
+			});
+		})
+		.post(function(req, res) {
+
+			/*var user = new User(req.body);
+
+			user.save(function(err, user) {
+
+				if(err) res.send(err);
+
+				res.send(user);
+			});
+			*/
+
+			User.create(req.body, function(err, user) {
+
+				if(err) res.send(err);
+
+				res.send(user);
+			});
+
+		});
+
+	router.route('/users/:id')
+		.get(function(req, res) {
+
+			User.findOne({_id: req.params.id}, function(err, user) {
+
+				if(err) res.send(err);
+
+				res.send(user);
+			});
+		})
+		.post(function(req, res) {
+
+			/*
+			User.findOne({id: req.params.id}, function(err, user) {
+
+				if (err) res.send(err);
+
+				if(req.body.firstName) user.firstName = req.body.firstName;
+
+				if(req.body.lastName) user.lastName = req.body.lastName;
+
+				if(req.body.email) user.email = req.body.email;
+
+				if(typeof req.body.isActive === 'boolean') user.isActive = req.body.isActive;
+
+				if(typeof req.body.isAdmin === 'boolean') user.isAdmin = req.body.isAdmin;
+
+				user.save(function(err, user) {
+					if(err) res.send(err);
+
+					res.send(user);
+				});
+			});
+			*/
+
+			User.findByIdAndUpdate(req.params.id, req.body, function(err, user) {
+				if(err) res.send(err);
+
+				res.send(user);
+			});
+		})
+		.delete(function(req, res) {
+
+			/*
+			User.findOne({id: req.params.id}, function(err, user) {
+				if(err) res.send(err);
+
+				user.remove(function(err, response) {
+					if(err) res.send(err);
+
+					res.send(response);
+				});
+			});
+			*/
+
+			User.findByIdAndRemove(req.params.id, function(err, response) {
+				if(err) res.send(err);
+
+				res.send(response);
+			});
+		});
+
+	app.use('/api/admin', router);
 };

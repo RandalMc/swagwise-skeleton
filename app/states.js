@@ -64,7 +64,12 @@
                 url: '/signup',
                 controller: 'SignupController',
                 templateUrl: 'views/signup.html'
-            });
+            })
+	        .state('users', {
+		        url: '/users',
+		        controller: 'UsersController',
+		        templateUrl: 'views/admin/users.html'
+	        })
 
     });
 
