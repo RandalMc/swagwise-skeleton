@@ -6,7 +6,6 @@ var express       = require('express'),
     fs            = require('fs'),
     logger        = require('morgan'),
     mongoose      = require('mongoose'),
-    uriUtil       = require('mongodb-uri'),
     cookieParser  = require('cookie-parser'),
     bodyParser    = require('body-parser'),
     passport      = require('passport'),
@@ -54,17 +53,9 @@ var options = {
     }
 };
 
-/*
- * Mongoose uses a different connection string format than MongoDB's standard.
- * Use the mongodb-uri library to help you convert from the standard format to
- * Mongoose's format.
- */
-
-var mongodbUri = 'mongodb://swaguser:swagwise@ds045679.mongolab.com:45679/geekwise';
-var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 var conn = mongoose.connection;
-
-mongoose.connect('mongodb://localhost:27017/swagwise');
+//'mongodb://localhost:27017/swagwise'
+mongoose.connect('mongodb://swaguser:swagwise@ds045679.mongolab.com:45679/geekwise');
 conn.on('error', console.error.bind(console, 'connection error:'));
 	conn.once('open', function() {
 		// Wait for the database connection to establish, then start the app.
