@@ -1,0 +1,36 @@
+<div class="jumbotron">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-lg-12">
+				<h1 class="h1">Edit <small>{{user.firstName + ' ' + user.lastName}}</small></h1>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+
+			<form ng-submit="save()">
+				<label>First name</label>
+				<input class="form-control" ng-model="user.firstName" type="text" />
+				<label>Last name</label>
+				<input class="form-control" ng-model="user.lastName" type="text" />
+				<label>Email</label>
+				<input class="form-control" ng-model="user.email" type="text" />
+				<div class="checkbox">
+				<label>
+				<input class="form-control" type="checkbox" ng-checked="user.isAdmin">
+					Admin</label>
+					</div>
+				<div class="checkbox">
+				<label>
+				<input class="form-control" type="checkbox" ng-checked="user.isActive">
+					Active</label>
+					</div>
+				<button type="submit" class="btn btn-primary">save</button>
+		</form>
+	</div>
+	</div>
+</div>

@@ -241,7 +241,20 @@
 
 			$scope.users = API.user.query();
 
-		});
+		})
 
+	    .controller('EditUsersController', function($scope, $stateParams, API) {
+
+		    API.user.get({id: $stateParams.id}, function(user) {
+			    $scope.user = user;
+		    });
+
+		    $scope.save = function() {
+
+			    $scope.user.$save({
+				    id: $scope.user._id
+			    });
+		    };
+	    });
 
 })(window.angular);

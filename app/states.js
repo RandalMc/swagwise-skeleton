@@ -70,6 +70,11 @@
 		        controller: 'UsersController',
 		        templateUrl: 'views/admin/users.html'
 	        })
+            .state('editusers', {
+                url: '/users/:id',
+                controller: 'EditUsersController',
+                templateUrl: 'views/admin/edituser.html'
+            })
 
     });
 

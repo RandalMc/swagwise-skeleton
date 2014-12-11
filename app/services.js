@@ -17,7 +17,7 @@
 
             register: $resource('/api/register'),
 
-	        user: $resource('/api/admin/users')
+	        user: $resource('/api/admin/users/:id', {id:'@id'})
 
         };
 
