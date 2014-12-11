@@ -15,6 +15,9 @@ var express       = require('express'),
     http          = require('http'),
     https         = require('https');
 
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 8080;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+
 /* ===================== CONFIGURATION ==================== */
 
 var app = express();
@@ -26,8 +29,6 @@ var credentials  = {key: privateKey, cert: certificate};
 var httpServer   = http.createServer(app);
 var httpsServer  = https.createServer(credentials, app);
 
-// Default port or port 9001
-var port = process.env.PORT || 9001;
 // 8443 for development, 443 for production
 var sslport = 8443;
 
@@ -59,10 +60,12 @@ mongoose.connect('mongodb://swaguser:swagwise@ds045679.mongolab.com:45679/geekwi
 conn.on('error', console.error.bind(console, 'connection error:'));
 	conn.once('open', function() {
 		// Wait for the database connection to establish, then start the app.
-		httpServer.listen(port);                                          // startup our app at http://localhost:9001
-		httpsServer.listen(sslport);                                      // startup our HTTPS server on http://localhost:8443 or :443
-		console.log('Get your swagger on at http://localhost:' + port);   // shoutout to the user
-    console.log('Get your secure swagger on at https://localhost:' + sslport);   // shoutout to the user
+		httpServer.listen(server_port, server_ip_address, function() {
+            console.log('Get your swagger on at http://localhost: %s', server_port);
+        });
+		httpsServer.listen(sslport, function() {
+            console.log('Get your secure swagger on at https://localhost: %s', sslport);
+        });
 });
 
 /* ================= REGISTER MODULES ===================== */
